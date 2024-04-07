@@ -28,11 +28,11 @@ def translate(text):
         "http": "put_your_proxy_here" 
         
     }
-    #Change target to what language you want translate
-    trans_set = GoogleTranslator(source='auto', target='vi', proxies = proxies)
+    trans_set = GoogleTranslator(source='auto', target='vi', proxies = proxies) #Change target to what language you want translate
     translated_text = (f'{trans_set.translate(text)}')
     return translated_text
 
+#set text style for drawing 
 myFont = ImageFont.truetype('bahnschrift.ttf', 25)
 fill_color = (255, 255, 255)
 stroke_color = (0, 0, 0)
@@ -41,10 +41,10 @@ start_time = timeit.default_timer() #start processing time counter
 
 pil_img = Image.open('img_in.png')
 draw = ImageDraw.Draw(pil_img)
-#Change language same with input image for better performance (en-US is fastest speed)
-data = json.dumps(recognize_pil_sync(pil_img, "ja-JP"))
+data = json.dumps(recognize_pil_sync(pil_img, "ja-JP")) #Change language same with input image for better performance (en-US is fastest)
 collect_data = json.loads(data)
 
+#using concurrent.furtures to increase translate speed
 with ThreadPoolExecutor(max_workers=len(get_texts())+1) as excutor:
     result = list(excutor.map(translate, get_texts()))
     for text, position in zip(result, get_text_positions()):
